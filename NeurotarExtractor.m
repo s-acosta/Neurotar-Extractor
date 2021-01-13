@@ -181,10 +181,11 @@ classdef NeurotarExtractor < handle
             % Adapted from Will
             
             speed = obj.behavior.speed;
+            speed = smooth(speed, 200, 'moving')';
             
-            speed(speed>225) = 225;
-            speed_thresh = 5; 
-            bout_thresh = 5;
+            speed(speed>200) = 200;
+            speed_thresh = 8; 
+            bout_thresh = 10;
             
             moving_time = speed > speed_thresh; 
             moving_time = [false, moving_time, false];
@@ -195,6 +196,8 @@ classdef NeurotarExtractor < handle
                 
                 if bout_end(i)-bout_start(i) < bout_thresh
                     moving_time(bout_start(i):bout_end(i)) = false;
+                elseif bout_start(i)>10
+                    moving_time(bout_start(i)-10:bout_end(i)) = true;
                 end
                 
             end
