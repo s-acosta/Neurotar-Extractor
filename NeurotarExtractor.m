@@ -29,6 +29,7 @@ classdef NeurotarExtractor < handle
                 obj.session_id = session_id;
             end
             
+	    % made changes here
             obj.checkIDName()
             obj.readTDMS()
             
