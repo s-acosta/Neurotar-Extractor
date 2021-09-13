@@ -24,16 +24,16 @@ classdef NeurotarExtractor < handle
             parse(obj.options,varargin{:})
             
             if nargin == 0
-                getSession(obj)
+                obj.getSession()
             else
                 obj.session_id = session_id;
             end
             
-            checkIDName(obj)
-            readTDMS(obj)
+            obj.checkIDName()
+            obj.readTDMS()
             
-            resampling(obj)
-            movingDetector(obj)
+            obj.resampling()
+            obj.movingDetector()
             
         end
         
