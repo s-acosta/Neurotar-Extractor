@@ -59,7 +59,7 @@ classdef NeurotarExtractor < handle
                 catch ME
                     msg = errordlg(ME.message,'ID Error');
                     pause(2)
-                    getSession(obj)
+                    obj.getSession()
                     close(msg)
                     return
                 end
@@ -89,51 +89,51 @@ classdef NeurotarExtractor < handle
                 msg_1 = errordlg(ME.message,'ID Error');
                 pause(2)
                 
-                getSession(obj)
+                obj.getSession()
                 close(msg_1)
                
-                readTDMS(obj)
-                
-            end
-           
-            behavior_data = behavior_file.data;
-            obj.behavior_raw = struct;
-            
-            switch obj.options.Results.Version
-                
-                case 'New'
-                    
-                    obj.behavior_raw.R = behavior_data{8}';
-                    obj.behavior_raw.phi = behavior_data{9}';
-                    obj.behavior_raw.alpha = behavior_data{10}';
-                    obj.behavior_raw.X = 1.25 * behavior_data{11}';
-                    obj.behavior_raw.Y = 1.25 * -behavior_data{12}';
-                    obj.behavior_raw.theta = behavior_data{13}';
-                    obj.behavior_raw.beta = behavior_data{14}';
-                    obj.behavior_raw.w = behavior_data{15}';
-                    obj.behavior_raw.speed = behavior_data{16}';
-                    obj.behavior_raw.zones = behavior_data{17}';
-                    obj.behavior_raw.time = behavior_data{5};
-                    obj.behavior_raw.time = obj.behavior_raw.time - ...
-                        obj.behavior_raw.time(1); 
-                   
-                case 'Old'
-                    
-                    obj.behavior_raw.R = behavior_data{10}';
-                    obj.behavior_raw.phi = behavior_data{11}';
-                    obj.behavior_raw.alpha = behavior_data{12}';
-                    obj.behavior_raw.X = behavior_data{13}';
-                    obj.behavior_raw.Y = -behavior_data{14}';
-                    obj.behavior_raw.w = behavior_data{15}';
-                    obj.behavior_raw.speed = behavior_data{16}';
-                    obj.behavior_raw.zones = behavior_data{17}';
-                    
-                otherwise
-                    answer = questdlg('Which NeuroTar version are you using?',...
-                        'NeuroTar Version','Old', 'New', 'New');
-                    
-                    obj.options.Results.Version = answer;
-                    readTMDS(obj);
+		obj.readTDMS()
+
+	    end
+
+	    behavior_data = behavior_file.data;
+	    obj.behavior_raw = struct;
+
+	    switch obj.options.Results.Version
+
+		    case 'New'
+
+			    obj.behavior_raw.R = behavior_data{8}';
+			    obj.behavior_raw.phi = behavior_data{9}';
+			    obj.behavior_raw.alpha = behavior_data{10}';
+			    obj.behavior_raw.X = 1.25 * behavior_data{11}';
+			    obj.behavior_raw.Y = 1.25 * -behavior_data{12}';
+			    obj.behavior_raw.theta = behavior_data{13}';
+			    obj.behavior_raw.beta = behavior_data{14}';
+			    obj.behavior_raw.w = behavior_data{15}';
+			    obj.behavior_raw.speed = behavior_data{16}';
+			    obj.behavior_raw.zones = behavior_data{17}';
+			    obj.behavior_raw.time = behavior_data{5};
+			    obj.behavior_raw.time = obj.behavior_raw.time - ...
+				    obj.behavior_raw.time(1); 
+
+		    case 'Old'
+
+			    obj.behavior_raw.R = behavior_data{10}';
+			    obj.behavior_raw.phi = behavior_data{11}';
+			    obj.behavior_raw.alpha = behavior_data{12}';
+			    obj.behavior_raw.X = behavior_data{13}';
+			    obj.behavior_raw.Y = -behavior_data{14}';
+			    obj.behavior_raw.w = behavior_data{15}';
+			    obj.behavior_raw.speed = behavior_data{16}';
+			    obj.behavior_raw.zones = behavior_data{17}';
+
+		    otherwise
+			    answer = questdlg('Which NeuroTar version are you using?',...
+				    'NeuroTar Version','Old', 'New', 'New');
+
+			    obj.options.Results.Version = answer;
+			    readTMDS(obj);
                    
             end
             
