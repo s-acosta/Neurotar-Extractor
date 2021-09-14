@@ -28,11 +28,11 @@ classdef NeurotarExtractor < handle
             end
             
 			obj.tdms_filename = obj.checkTDMSFilename(tdms_filename); % added to allow flexibility for either filenames or not
-			obj.readTDMS()
+			obj.readTDMS();
 
-			obj.resampling()
-			obj.movingDetector()
-
+			obj.resampling();
+			obj.movingDetector();
+			obj.extractHeading(); % this does some minor preprocessing on alpha to get "heading"
 		end
 
 	end
@@ -222,7 +222,20 @@ classdef NeurotarExtractor < handle
 			obj.behavior.moving_time = moving_time(2:end-1);
 
 		end
+	
+		function extractHeading(obj, threshold)
+			if nargin < 2 || isempty(threshold)
+				threshold = 1; % stds
+			end
 
+			heading = obj.behavior.alpha;
+
+			changes = diff(heading);
+			heading(abs(changes) > threshold * std(changes)) = NaN; % removes the jumps between going from -180 to 180
+			obj.behavior.heading = heading;
+		end
+		
+	
 	end
 
 	% Statistic visualization
