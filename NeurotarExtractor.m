@@ -17,15 +17,16 @@ classdef NeurotarExtractor < handle
 		function obj = NeurotarExtractor(tdms_filename, varargin)
 
 			obj.options = inputParser;
-			addParameter(obj.options, 'ImagingMethod','WideField')
-			addParameter(obj.options, 'SamplingWindow', 100)
-			addParameter(obj.options, 'OffTime', 25)
-			addParameter(obj.options, 'Version', 'New')
+			addParameter(obj.options, 'IMAGING_METHOD','WideField')
+			addParameter(obj.options, 'SAMPLING_PERIOD', 100) % changed from "samplingWindow", default 100 (msec?)
+			addParameter(obj.options, 'OFF_TIME', 25)
+			addParameter(obj.options, 'VERSION', 'New')
 			parse(obj.options,varargin{:})
 
 			if nargin == 0
 				tdms_filename = obj.getTDMSFilename();
-			end
+            end
+            
 			obj.tdms_filename = obj.checkTDMSFilename(tdms_filename); % added to allow flexibility for either filenames or not
 			obj.readTDMS()
 
@@ -40,7 +41,7 @@ classdef NeurotarExtractor < handle
 	methods (Access = private)
 		function out = checkTDMSFilename(obj, tdms_filename)
 			[~, ~, ext] = fileparts(tdms_filename);
-			if strcmp(ext, '.tdms')
+            if strcmp(ext, '.tdms')
 				out = tdms_filename;
 				return % is a proper tdms file
 			else
@@ -50,7 +51,7 @@ classdef NeurotarExtractor < handle
 		end
 
 		function enforceSessionName(obj, tdms_filename) % used to be called checkIDName
-
+% think about this section...
 			mouse_date = strsplit(tdms_filename, '_');
 			success = 0;
 
@@ -72,54 +73,54 @@ classdef NeurotarExtractor < handle
 			end
 
 		end
-		g
-		function getTDMSFilename(obj)
+		
+		function tdms_file = getTDMSFilename(obj)
 			fprintf('Choose your folder containing the .tdms file: \n');
 			folder = uigetdir();
-			old = cd(folder);
+			cd(folder);
 			tdms_file = dir('*.tdms');
 			if numel(tdms_file) > 1
 				warning('Multiple TDMS files found, choose your TDMS file: ')
 				tdms_file = uigetfile('*.tdms');
 			else
 				tdms_file = tdms_file.name;
-			end
+            end
 		end
 
-		function getSession(obj)
+		function out = getSession(obj)
 
 			prompt = {'Enter session ID [mouse_date(Y/M/D)]:'};
 			dlgtitle = 'Input';
 			dims = [1 35];
 			definput = {'SAM000_201205'};
-			obj.session_id = char(inputdlg(prompt,dlgtitle,dims,definput));
+			out = char(inputdlg(prompt,dlgtitle,dims,definput));
 
 		end
 
 		function readTDMS(obj)
 
-
-			try
+% 
+% 			try
 
 				behavior_file = TDMS_readTDMSFile(obj.tdms_filename);
-
-			catch ME
-				msg_1 = errordlg(ME.message,'ID Error');
-				pause(2)
-
-				obj.getSession()
-				close(msg_1)
-
-				obj.readTDMS()
-
-			end
+%                 
+% 			catch ME
+% 				msg_1 = errordlg(ME.message,'ID Error');
+% 				pause(2)
+% 
+% 				obj.getSession()
+% 				close(msg_1)
+% 
+% 				obj.readTDMS()
+% 
+% 			end
 
 			behavior_data = behavior_file.data;
 			obj.behavior_raw = struct;
 
-			switch obj.options.Results.Version
-
+			switch obj.options.Results.VERSION
 				case 'New'
+                    keyboard
 % ask santi here, in my version I use the name of the vector to find it, rather than the index, is that a good idea?
 					obj.behavior_raw.R = behavior_data{8}';
 					obj.behavior_raw.phi = behavior_data{9}';
@@ -150,7 +151,7 @@ classdef NeurotarExtractor < handle
 					answer = questdlg('Which NeuroTar version are you using?',...
 						'NeuroTar Version','Old', 'New', 'New');
 
-					obj.options.Results.Version = answer;
+					obj.options.Results.VERSION = answer;
 					readTMDS(obj);
 
 			end
@@ -171,14 +172,13 @@ classdef NeurotarExtractor < handle
 
 			obj.behavior = struct;
 
-			microscope_rate = obj.options.Results.SamplingWindow;
-			off_time = obj.options.Results.OffTime;
+			microscope_rate = obj.options.Results.SAMPLING_PERIOD;
+			off_time = obj.options.Results.OFF_TIME;
 			microscope_frames = 0:microscope_rate:obj.behavior_raw.time(end);
 
 			fn = fieldnames(obj.behavior_raw);
 
 			for i = 2:length(microscope_frames)
-
 				ind = obj.behavior_raw.time > microscope_frames(i-1) + off_time ...
 					& obj.behavior_raw.time < microscope_frames(i);
 
