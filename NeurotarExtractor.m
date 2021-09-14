@@ -23,8 +23,8 @@ classdef NeurotarExtractor < handle
 			addParameter(obj.options, 'VERSION', 'New')
 			parse(obj.options,varargin{:})
 
-			if nargin == 0
-				tdms_filename = obj.getTDMSFilename();
+            if nargin == 0
+                tdms_filename = obj.getTDMSFilename();
             end
             
 			obj.tdms_filename = obj.checkTDMSFilename(tdms_filename); % added to allow flexibility for either filenames or not
@@ -40,14 +40,14 @@ classdef NeurotarExtractor < handle
 	% Convert from .tdms methods. TDMS functions need to be in path
 	methods (Access = private)
 		function out = checkTDMSFilename(obj, tdms_filename)
-			[~, ~, ext] = fileparts(tdms_filename);
+            [~, ~, ext] = fileparts(tdms_filename);
             if strcmp(ext, '.tdms')
-				out = tdms_filename;
-				return % is a proper tdms file
-			else
-				obj.enforceSessionName(tdms_filename); % confirm that it's a session name, not some other junk
-				out = strcat(tdms_filename, '.tdms'); % properly convert from session name into tdms filename
-			end
+                out = tdms_filename;
+                return % is a proper tdms file
+            else
+                obj.enforceSessionName(tdms_filename); % confirm that it's a session name, not some other junk
+                out = strcat(tdms_filename, '.tdms'); % properly convert from session name into tdms filename
+            end
 		end
 
 		function enforceSessionName(obj, tdms_filename) % used to be called checkIDName
@@ -120,8 +120,6 @@ classdef NeurotarExtractor < handle
 
 			switch obj.options.Results.VERSION
 				case 'New'
-                    keyboard
-% ask santi here, in my version I use the name of the vector to find it, rather than the index, is that a good idea?
 					obj.behavior_raw.R = behavior_data{8}';
 					obj.behavior_raw.phi = behavior_data{9}';
 					obj.behavior_raw.alpha = behavior_data{10}';
