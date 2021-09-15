@@ -48,29 +48,31 @@ classdef NeurotarExtractor < handle
                 obj.enforceSessionName(tdms_filename); % confirm that it's a session name, not some other junk
                 out = strcat(tdms_filename, '.tdms'); % properly convert from session name into tdms filename
             end
-		end
-
-		function enforceSessionName(obj, tdms_filename) % used to be called checkIDName
-% think about this section...
-			mouse_date = strsplit(tdms_filename, '_');
-			success = 0;
-
-			while success == 0
-				try
-					assert(isequal(isstrprop(mouse_date{1},'alpha'),[1 1 1 0 0 0]),...
-						'Session ID incorrect (mouse should be LLLNNN)');
-					assert(isequal(isstrprop(mouse_date{2},'digit'),[1 1 1 1 1 1]), ...
-						'Session ID incorrect,(date should be YYMMDD)');
-					success = 1;
-
-				catch ME
-					msg = errordlg(ME.message,'ID Error');
-					pause(2)
-					obj.getSession()
-					close(msg)
-					return
-				end
-			end
+        end
+        
+        function enforceSessionName(obj, tdms_filename) % used to be called checkIDName
+            % think about this section...
+            if isempty(regexp(tdms_filename, '[A-Z][A-Z][A-Z][0-9][0-9][0-9]_[0-9][0-9][0-1][0-2][0-3][0-9]', 'once')) % erforce format
+                error('Session ID incorrect, should be in the format: NNN###_YYMMDD, examples: SAM000_210910');
+            end
+            
+% 			while success == 0
+% 				try
+%                     keyboard
+% 					assert(isequal(isstrprop(mouse_date{1},'alpha'),[1 1 1 0 0 0]),...
+% 						'Session ID incorrect (mouse should be LLLNNN)');
+% 					assert(isequal(isstrprop(mouse_date{2},'digit'),[1 1 1 1 1 1]), ...
+% 						'Session ID incorrect,(date should be YYMMDD)');
+% 					success = 1;
+% 
+% 				catch ME
+% 					msg = errordlg(ME.message,'ID Error');
+% 					pause(2)
+% 					obj.getSession()
+% 					close(msg)
+% 					return
+% 				end
+% 			end
 
 		end
 		
