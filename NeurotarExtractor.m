@@ -73,7 +73,7 @@ classdef NeurotarExtractor < handle
                 [tdms_fn, tdms_pn] = uigetfile('*.tdms');
                 tdms_filename = strcat(tdms_pn, filesep, tdms_fn);
             else
-                tdms_filename = strcat(tdms_location.folder, filesep, tdms.name);
+                tdms_filename = strcat(tdms_location.folder, filesep, tdms_location.name);
             end
             
         end
