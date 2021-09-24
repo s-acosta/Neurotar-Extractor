@@ -127,8 +127,8 @@ classdef NeurotarExtractor < handle
             obj.behavior_raw.w = behavior_data{15}';
             obj.behavior_raw.speed = behavior_data{16}';
             obj.behavior_raw.zones = behavior_data{17}';
-            obj.behavior_raw.pose = [obj.behavior.X; obj.behavior.Y; ...
-                        wrapTo360(obj.behavior.Y - 90)];
+            obj.behavior_raw.pose = [obj.behavior_raw.X; obj.behavior_raw.Y; ...
+                        wrapTo360(obj.behavior_raw.alpha - 90)];
             
         end
         
