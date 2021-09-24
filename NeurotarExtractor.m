@@ -96,7 +96,6 @@ classdef NeurotarExtractor < handle
                     obj.behavior_raw.Y = -behavior_data{12}';
                     if max(obj.behavior_raw.X) < 100 ...                       % In some neutorar versions, X and Y are normalized to 100,
                             && max(obj.behavior_raw.Y < 100) 
-                        disp('wow')
                         obj.behavior_raw.X = 1.25 * obj.behavior_raw.X;
                         obj.behavior_raw.Y = 1.25 * obj.behavior_raw.Y;
                     end
