@@ -102,12 +102,7 @@ classdef NeurotarExtractor < handle
                     
                     obj.behavior_raw.theta = behavior_data{13}';
                     obj.behavior_raw.beta = behavior_data{14}';
-                    obj.behavior_raw.w = behavior_data{15}';
-                    obj.behavior_raw.speed = behavior_data{16}';
-                    obj.behavior_raw.zones = behavior_data{17}';
-                    obj.behavior_raw.time = behavior_data{5};
-                    obj.behavior_raw.time = obj.behavior_raw.time - ...
-                        obj.behavior_raw.time(1);
+                    
                     
                 case 'Old'
                     obj.behavior_raw.R = behavior_data{10}';
@@ -115,13 +110,8 @@ classdef NeurotarExtractor < handle
                     obj.behavior_raw.alpha = behavior_data{12}';
                     obj.behavior_raw.X = behavior_data{13}';
                     obj.behavior_raw.Y = -behavior_data{14}';
-                    obj.behavior_raw.w = behavior_data{15}';
-                    obj.behavior_raw.speed = behavior_data{16}';
-                    obj.behavior_raw.zones = behavior_data{17}';
-                    obj.behavior_raw.time = behavior_data{5};
-                    obj.behavior_raw.time = obj.behavior_raw.time - ...
-                        obj.behavior_raw.time(1);
-                    
+
+                   
                 otherwise
                     answer = questdlg('Which NeuroTar version are you using?',...
                         'NeuroTar Version','Old', 'New', 'New');
@@ -131,11 +121,20 @@ classdef NeurotarExtractor < handle
                     
             end
             
+            obj.behavior_raw.time = behavior_data{5};
+                    obj.behavior_raw.time = obj.behavior_raw.time - ...
+                        obj.behavior_raw.time(1);
+            obj.behavior_raw.w = behavior_data{15}';
+            obj.behavior_raw.speed = behavior_data{16}';
+            obj.behavior_raw.zones = behavior_data{17}';
+            obj.behavior_raw.pose = [obj.behavior.X; obj.behavior.Y; ...
+                        wrapTo360(obj.behavior.Y - 90)];
+            
         end
         
     end
     
-    % Processing methods
+    % Postprocessing methods
     methods (Access = private)
         
         function resampling(obj)
@@ -202,6 +201,7 @@ classdef NeurotarExtractor < handle
         
     end
     
+  
     % Statistic visualization
     methods (Access = private)
         
