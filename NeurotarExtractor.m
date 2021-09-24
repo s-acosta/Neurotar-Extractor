@@ -18,7 +18,7 @@ classdef NeurotarExtractor < handle
             
             obj.options = inputParser;
             addParameter(obj.options, 'IMAGING_METHOD','WideField')
-            addParameter(obj.options, 'SAMPLING_PERIOD', 100) % changed from "samplingWindow", default 100 (msec?)
+            addParameter(obj.options, 'SAMPLING_PERIOD', 100)                   % changed from "samplingWindow", default 100 (msec?)
             addParameter(obj.options, 'OFF_TIME', 0)
             addParameter(obj.options, 'VERSION', 'New')
             parse(obj.options,varargin{:})
@@ -27,7 +27,7 @@ classdef NeurotarExtractor < handle
                 tdms_filename = obj.getTDMSFilename();
             end
             
-            obj.tdms_filename = obj.checkTDMSFilename(tdms_filename); % added to allow flexibility for either filenames or not
+            obj.tdms_filename = obj.checkTDMSFilename(tdms_filename);           % added to allow flexibility for either filenames or not
             obj.readTDMS();
             
             obj.resampling();
@@ -46,13 +46,13 @@ classdef NeurotarExtractor < handle
                 out = tdms_filename;
                 return % is a proper tdms file
             else
-                obj.enforceSessionName(tdms_filename); % confirm that it's a session name, not some other junk
-                out = strcat(tdms_filename, '.tdms'); % properly convert from session name into tdms filename
+                obj.enforceSessionName(tdms_filename);                          % confirm that it's a session name, not some other junk
+                out = strcat(tdms_filename, '.tdms');                           % properly convert from session name into tdms filename
             end
             
         end
         
-        function enforceSessionName(obj, tdms_filename) % used to be called checkIDName
+        function enforceSessionName(obj, tdms_filename)                         % used to be called checkIDName
             % think about this section...
             
             if isempty(regexp(tdms_filename,...
@@ -86,12 +86,21 @@ classdef NeurotarExtractor < handle
             obj.behavior_raw = struct;
             
             switch obj.options.Results.VERSION
+                
                 case 'New'
                     obj.behavior_raw.R = behavior_data{8}';
                     obj.behavior_raw.phi = behavior_data{9}';
                     obj.behavior_raw.alpha = behavior_data{10}';
-                    obj.behavior_raw.X = 1.25 * behavior_data{11}';
-                    obj.behavior_raw.Y = 1.25 * -behavior_data{12}';
+                    
+                    obj.behavior_raw.X = behavior_data{11}';
+                    obj.behavior_raw.Y = -behavior_data{12}';
+                    if max(obj.behavior_raw.X) < 100 ...                       % In some neutorar versions, X and Y are normalized to 100,
+                            && max(obj.behavior_raw.Y < 100) 
+                        disp('wow')
+                        obj.behavior_raw.X = 1.25 * obj.behavior_raw.X;
+                        obj.behavior_raw.Y = 1.25 * obj.behavior_raw.Y;
+                    end
+                    
                     obj.behavior_raw.theta = behavior_data{13}';
                     obj.behavior_raw.beta = behavior_data{14}';
                     obj.behavior_raw.w = behavior_data{15}';
@@ -102,7 +111,6 @@ classdef NeurotarExtractor < handle
                         obj.behavior_raw.time(1);
                     
                 case 'Old'
-                    
                     obj.behavior_raw.R = behavior_data{10}';
                     obj.behavior_raw.phi = behavior_data{11}';
                     obj.behavior_raw.alpha = behavior_data{12}';
@@ -111,6 +119,9 @@ classdef NeurotarExtractor < handle
                     obj.behavior_raw.w = behavior_data{15}';
                     obj.behavior_raw.speed = behavior_data{16}';
                     obj.behavior_raw.zones = behavior_data{17}';
+                    obj.behavior_raw.time = behavior_data{5};
+                    obj.behavior_raw.time = obj.behavior_raw.time - ...
+                        obj.behavior_raw.time(1);
                     
                 otherwise
                     answer = questdlg('Which NeuroTar version are you using?',...
