@@ -94,10 +94,10 @@ classdef NeurotarExtractor < handle
                     
                     obj.behavior_raw.X = behavior_data{11}';
                     obj.behavior_raw.Y = -behavior_data{12}';
-                    if max(obj.behavior_raw.X) < 100 ...                       % In some neutorar versions, X and Y are normalized to 100,
-                            && max(obj.behavior_raw.Y < 100) 
+                    if max(abs(obj.behavior_raw.X)) < 100 ...                   % In some neutorar versions, X and Y are normalized to 100,
+                            && max(abs(obj.behavior_raw.Y)) < 100
                         obj.behavior_raw.X = 1.25 * obj.behavior_raw.X;
-                        obj.behavior_raw.Y = 1.25 * obj.behavior_raw.Y;
+                        obj.behavior_raw.Y = 1.25 * obj.behavior_raw.Y; 
                     end
                     
                     obj.behavior_raw.theta = behavior_data{13}';
@@ -162,8 +162,8 @@ classdef NeurotarExtractor < handle
                 
             end
             
-            obj.behavior.pose = [obj.behavior.X, obj.behavior.Y, ...
-                        wrapTo360(obj.behavior.alpha - 90)]';
+            obj.behavior.pose = [obj.behavior.X; obj.behavior.Y; ...
+                        wrapTo360(obj.behavior.alpha - 90)];
             
         end
         
