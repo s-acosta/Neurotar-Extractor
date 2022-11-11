@@ -22,7 +22,8 @@ speed = Neurotar.speed;
 % If we want to align with recording, in this case a 30 min recording (18000
 % frames when prompted). Notice how variables are now of length 18000
 
-Neurotar = NewNeurotarExtractor('SAM003_220729', isMoving = false);
+Neurotar = NewNeurotarExtractor('SAM003_220729', isMoving = false, ...
+    RECORDING_FRAMES = 18000);
 
 X = Neurotar.X;
 Y = Neurotar.Y;

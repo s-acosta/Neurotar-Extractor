@@ -4,10 +4,10 @@ classdef NewNeurotarExtractor < handle
         FILENAME
         CAGE_RADIUS = 125
         ANGLE_TYPE = 'Positive'
-        RECORDING_FRAMES = 12000
         RECORDING_RATE = 10
         SPEED_THRESHOLD = 10;
         BOUT_THRESHOLD = 10;
+        RECORDING_FRAMES
         data
     end
 
@@ -33,10 +33,12 @@ classdef NewNeurotarExtractor < handle
                 session
                 options.isRecording = true
                 options.isMoving = false
+                options.RECORDING_FRAMES
             end
 
             obj.isRecording= options.isRecording;
             obj.isMoving = options.isMoving;
+            obj.RECORDING_FRAMES = options.RECORDING_FRAMES;
 
             if nargin == 0
                 obj.getFilename();
@@ -44,7 +46,7 @@ classdef NewNeurotarExtractor < handle
                 obj.FILENAME = strcat(session, '.tdms');
             end
 
-            if obj.isRecording
+            if obj.isRecording && isempty(obj.RECORDING_FRAMES)
                 prompt = "How many recording frames ? ";
                 obj.RECORDING_FRAMES = input(prompt);
             end
