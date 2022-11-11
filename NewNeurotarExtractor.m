@@ -33,12 +33,15 @@ classdef NewNeurotarExtractor < handle
                 session
                 options.isRecording = true
                 options.isMoving = false
-                options.RECORDING_FRAMES
+                options.RECORDING_FRAMES = 12000
             end
 
             obj.isRecording= options.isRecording;
             obj.isMoving = options.isMoving;
-            obj.RECORDING_FRAMES = options.RECORDING_FRAMES;
+
+            if ~isempty( options.RECORDING_FRAMES)
+                obj.RECORDING_FRAMES = options.RECORDING_FRAMES;
+            end
 
             if nargin == 0
                 obj.getFilename();

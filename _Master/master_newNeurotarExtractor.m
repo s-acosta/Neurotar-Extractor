@@ -35,7 +35,8 @@ speed = Neurotar.speed;
 % To get only the variables when the mouse is moving (with bouts of at
 % least 10 with speed higher than 10, these values can be changed)
 
-Neurotar = NewNeurotarExtractor('SAM003_220729', isMoving = true);
+Neurotar = NewNeurotarExtractor('SAM003_220729', isMoving = true, ...
+    RECORDING_FRAMES = 18000);
 
 X = Neurotar.X;
 Y = Neurotar.Y;
