@@ -27,11 +27,19 @@ classdef NeurotarExtractor < handle
                 tdms_filename = obj.getTDMSFilename();
             end
             
+<<<<<<< Updated upstream
             obj.tdms_filename = obj.checkTDMSFilename(tdms_filename); % added to allow flexibility for either filenames or not
             obj.readTDMS();
             
             obj.resampling();
             obj.movingDetector();
+=======
+            obj.readFile();
+             
+%             obj.resampling();
+%             obj.movingDetector();
+
+>>>>>>> Stashed changes
         end
         
     end
