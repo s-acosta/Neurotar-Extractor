@@ -23,6 +23,7 @@ classdef NewNeurotarExtractor < handle
         speed
         alpha
         R
+        phi
     end
 
     methods
@@ -204,6 +205,20 @@ classdef NewNeurotarExtractor < handle
 
             if obj.isMoving
                 alpha = alpha(obj.moving_times);
+            end
+
+        end
+
+        function phi = get.phi(obj)
+
+            if obj.isRecording
+                phi = getRecordingVariable(obj, 'phi');
+            else
+                phi = getVariable(obj, 'phi');
+            end
+
+            if obj.isMoving
+                phi = phi(obj.moving_times);
             end
 
         end
